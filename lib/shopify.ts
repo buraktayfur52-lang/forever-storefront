@@ -1,9 +1,11 @@
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
-const token = process.env.SHOPIFY_STOREFRONT_TOKEN;
+const tokenEnv = process.env.SHOPIFY_STOREFRONT_TOKEN;
 const version = process.env.SHOPIFY_API_VERSION || "2024-10";
 
 if (!domain) throw new Error("Missing SHOPIFY_STORE_DOMAIN in .env.local");
-if (!token) throw new Error("Missing SHOPIFY_STOREFRONT_TOKEN in .env.local");
+if (!tokenEnv) throw new Error("Missing SHOPIFY_STOREFRONT_TOKEN in .env.local");
+
+const token: string = tokenEnv; // ✅ artık string
 
 export async function shopifyFetch<T>(
   query: string,
@@ -11,7 +13,7 @@ export async function shopifyFetch<T>(
 ): Promise<T> {
   const url = `https://${domain}/api/${version}/graphql.json`;
 
-  const res = await fetch(url, {
+    const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -21,6 +23,7 @@ export async function shopifyFetch<T>(
     body: JSON.stringify({ query, variables }),
     cache: "no-store",
   });
+
 
   const raw = await res.text();
 
