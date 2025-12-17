@@ -13,16 +13,21 @@ export async function shopifyFetch<T>(
 ): Promise<T> {
   const url = `https://${domain}/api/${version}/graphql.json`;
 
-    const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": token,
-      Accept: "application/json",
-    },
-    body: JSON.stringify({ query, variables }),
-    cache: "no-store",
-  });
+
+  const headers: HeadersInit = {
+  "Content-Type": "application/json",
+  "X-Shopify-Storefront-Access-Token": token,
+  Accept: "application/json",
+};
+
+
+const res = await fetch(url, {
+  method: "POST",
+  headers, // 👈 burada artık sorun yok
+  body: JSON.stringify({ query, variables }),
+  cache: "no-store",
+});
+
 
 
   const raw = await res.text();
